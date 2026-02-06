@@ -10,7 +10,6 @@ class GaussianClassifier1D:
         self.p0, self.p1 = None, None
     
     def fit(self, X0, X1):
-        """Designs the classifier by estimating parameters."""
         self.mu0, self.std0 = np.mean(X0), np.std(X0)
         self.mu1, self.std1 = np.mean(X1), np.std(X1)
         
@@ -28,11 +27,9 @@ class GaussianClassifier1D:
         post1 = (lik1 * self.p1) / px
         
         discr = np.log((post0 + 1e-10) / (post1 + 1e-10))
-        
         return post0, post1, discr
 
     def find_threshold(self, risk_ratio=1.0):
-       
         var0, var1 = self.std0**2, self.std1**2
         
         a = 1/(2*var0) - 1/(2*var1)
@@ -40,7 +37,6 @@ class GaussianClassifier1D:
         c = self.mu0**2/(2*var0) - self.mu1**2/(2*var1) - np.log(self.p1/self.p0 * risk_ratio * (self.std0/self.std1))
         
         roots = np.roots([a, b, c])
-
         for r in roots:
             if min(self.mu0, self.mu1) <= r <= max(self.mu0, self.mu1):
                 return r
@@ -56,10 +52,10 @@ def analyze_feature(feature_index, feature_name):
     print(f"Analysis: {feature_name}")
     
     setosa_data = iris.data[:50, feature_index]
-    versicolor_data = iris.data[50:100, feature_index]
+    versicolour_data = iris.data[50:100, feature_index]
     
     clf = GaussianClassifier1D()
-    clf.fit(setosa_data, versicolor_data)
+    clf.fit(setosa_data, versicolour_data)
     
     u1 = clf.find_threshold(risk_ratio=1.0)
     print(f"Optimal Threshold u1 (Min Error): {u1:.4f}")
@@ -77,7 +73,7 @@ def analyze_feature(feature_index, feature_name):
     x_axis = np.linspace(X.min()-1, X.max()+1, 1000)
     plt.figure(figsize=(10, 4))
     plt.plot(x_axis, norm.pdf(x_axis, clf.mu0, clf.std0)*clf.p0, 'b', label='Class 0 (Setosa)')
-    plt.plot(x_axis, norm.pdf(x_axis, clf.mu1, clf.std1)*clf.p1, 'r', label='Class 1 (Versicolor)')
+    plt.plot(x_axis, norm.pdf(x_axis, clf.mu1, clf.std1)*clf.p1, 'r', label='Class 1 (Versicolour)')
     plt.axvline(u1, color='k', linestyle='--', label=f'u1 (Min Error): {u1:.2f}')
     plt.axvline(u2_vals[-1], color='g', linestyle=':', label=f'u2 (10x Penalty): {u2_vals[-1]:.2f}')
     plt.title(f'Distributions and Thresholds for {feature_name}')
@@ -91,7 +87,7 @@ def analyze_feature(feature_index, feature_name):
     
     for val in test_values:
         p0, p1, g = clf.get_posteriors_and_g(val)
-        decision = "w0-Setosa" if g > 0 else "w1-Versicolor"
+        decision = "w0-Setosa" if g > 0 else "w1-Versicolour"
         print(f"{val:<10} | {p0:.5f}      | {p1:.5f}      | {g:+.4f}    | {decision}")
 
 analyze_feature(0, "Sepal Length")
