@@ -190,5 +190,3 @@ test(testBC,a=learn(trainBC, a=a))
 
 print("\nTask 4.2: Data Set BC - Testing with 30%")
 test(test4,a=learn(train4, a=a))
-
-
