@@ -89,7 +89,7 @@ def learn(testingSet, a):
     print(f"number of iterations {k}")
     return newa            
 
-def plot(testingSet, a, task):
+def plot(testingSet, a):
 
     half = int(testingSet.shape[0] / 2)
     class1_x = testingSet[:half, 0]
