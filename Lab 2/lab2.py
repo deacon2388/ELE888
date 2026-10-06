@@ -28,16 +28,12 @@ B30p = np.column_stack((Bseplen,Bpetlen))[35:50] # 30%
 C70p = np.column_stack((Cseplen,Cpetlen))[:35] # 70% 
 C30p = np.column_stack((Cseplen,Cpetlen))[35:50] # 30% 
 
-
 def normalize(array):
     x = array.copy()
     for i in range(x.shape[0]):
         for j in range(x.shape[1]):
             x[i,j] = x[i,j]*(-1)
     return x
-
-
-
 
 # task 1 and 2
 trainAB = np.vstack((A30p, normalize(B30p))) # 30% train
@@ -53,7 +49,7 @@ train4 = np.vstack((A30p, normalize(B30p)))  # 70% train
 test4 = np.vstack((A70p, B70p)) # 30% test
 
 tolerance = 0.0001
-learningrate = 0.01 # n(k) = 0.1
+learningrate = 1 # n(k) = 0.1
 
 def updateA(avector, ymiss):
     newa = avector.copy()

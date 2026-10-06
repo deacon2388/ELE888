@@ -38,6 +38,40 @@ def plot_decision_surface(W_ji, W_kj):
     plt.grid(True)
     plt.show()
 
+def plot_hidden_decision_boundary(W_kj, W_ji, xd, t):
+    y_range = np.linspace(-1.1, 1.1, 100)
+    yy1, yy2 = np.meshgrid(y_range, y_range)
+    grid_points = np.c_[yy1.ravel(), yy2.ravel()]
+    predictions = []
+    for p in grid_points:
+        y_aug = np.insert(p, 0, 1) 
+        net_k = np.dot(W_kj, y_aug)
+        y_k = np.tanh(net_k)
+        predictions.append(y_k.item())
+
+    zz = np.array(predictions).reshape(yy1.shape)
+    plt.figure(figsize=(8, 6))
+    plt.contourf(yy1, yy2, zz, levels=50, cmap='RdBu', alpha=0.4)
+    plt.colorbar(label='Output Node Confidence')
+
+    hidden_points = []
+    for m in range(len(xd)):
+        y_j = np.tanh(np.dot(W_ji, xd[m]))
+        hidden_points.append(y_j)
+    
+    hidden_points = np.array(hidden_points)
+    
+    for i in range(4):
+        pt_color = 'white' if t[i] == 1 else 'black'
+        plt.scatter(hidden_points[i, 0], hidden_points[i, 1], 
+                    c=pt_color, edgecolors='k', s=150, zorder=5)
+
+    plt.title('Decision Boundary in Hidden Space ($y_1, y_2$)')
+    plt.xlabel('Hidden Node 1 ($y_1$)')
+    plt.ylabel('Hidden Node 2 ($y_2$)')
+    plt.grid(True, alpha=0.2)
+    plt.show()
+
 def forward(x):
     y = np.zeros(len(x))
     for m in range(len(x)):
@@ -119,6 +153,9 @@ print(forward(x=xd))
 print(t)
 print(f'Number of Epochs = {epochs}')
 
+print(W_ji)
+print(W_kj)
+
 plt.plot(history, linewidth=2)
 plt.grid(True)
 plt.xlabel('# of Epochs')
@@ -126,3 +163,5 @@ plt.ylabel('MSE')
 plt.show()
 
 plot_decision_surface(W_ji, W_kj)
+
+plot_hidden_decision_boundary(W_kj, W_ji, xd, t)
